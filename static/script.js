@@ -1,14 +1,17 @@
 document.addEventListener('DOMContentLoaded', function() {
     const promptInput = document.getElementById('promptInput');
     const generateBtn = document.getElementById('generateBtn');
+    const regenerateBtn = document.getElementById('regenerateBtn');
     const imageContainer = document.getElementById('imageContainer');
     const generatedImage = document.getElementById('generatedImage');
     const loadingIndicator = document.getElementById('loadingIndicator');
     const errorMessage = document.getElementById('errorMessage');
     const downloadBtn = document.getElementById('downloadBtn');
     const exampleBtns = document.querySelectorAll('.example-btn');
+    const modelRadios = document.querySelectorAll('input[name="model"]');
     const btnText = generateBtn.querySelector('.btn-text');
     const loadingSpinner = generateBtn.querySelector('.loading-spinner');
+    const modelStatus = document.querySelector('.model-status');
 
     // Example buttons click handler
     exampleBtns.forEach(btn => {
@@ -19,6 +22,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Generate button click handler
     generateBtn.addEventListener('click', generateImage);
+    
+    // Regenerate button click handler
+    if (regenerateBtn) {
+        regenerateBtn.addEventListener('click', generateImage);
+    }
 
     // Download button click handler
     downloadBtn.addEventListener('click', function() {
@@ -50,12 +58,23 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
+        // Get selected model
+        let selectedModel = 'riverflow';
+        modelRadios.forEach(radio => {
+            if (radio.checked) {
+                selectedModel = radio.value;
+            }
+        });
+
+        // Get model display name
+        const modelDisplay = document.querySelector(`input[value="${selectedModel}"]`).closest('.model-option').querySelector('h4').textContent;
+
         // Clear previous results
         hideImage();
         hideError();
         
         // Show loading state
-        setLoading(true);
+        setLoading(true, modelDisplay);
 
         try {
             const response = await fetch('/generate-image', {
@@ -63,7 +82,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ prompt: prompt })
+                body: JSON.stringify({ 
+                    prompt: prompt,
+                    model: selectedModel 
+                })
             });
 
             const data = await response.json();
@@ -78,18 +100,21 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         } catch (error) {
             console.error('Error:', error);
-            showError('An error occurred while generating the image');
+            showError('An error occurred while generating the image. Please try again.');
         } finally {
             setLoading(false);
         }
     }
 
-    function setLoading(isLoading) {
+    function setLoading(isLoading, modelName = '') {
         if (isLoading) {
             generateBtn.disabled = true;
             btnText.style.display = 'none';
             loadingSpinner.style.display = 'inline';
             loadingIndicator.style.display = 'block';
+            if (modelStatus) {
+                modelStatus.textContent = `Using ${modelName} model...`;
+            }
             imageContainer.style.display = 'none';
         } else {
             generateBtn.disabled = false;

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Text to Image Generator</title>
+    <title>AI Image Generator - Two Models</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
@@ -11,7 +11,7 @@
     <div class="container">
         <header>
             <h1>🎨 AI Image Generator</h1>
-            <p>Transform your words into stunning images using AI</p>
+            <p>Choose between two powerful AI models to create stunning images</p>
         </header>
 
         <main>
@@ -21,6 +21,21 @@
                     placeholder="Describe the image you want to generate... (e.g., 'A beautiful sunset over mountains with a lake')"
                     rows="4"
                 ></textarea>
+                
+                <div class="model-selection">
+                    <h3>Select Model:</h3>
+                    <div class="model-options">
+                        {% for key, model in models.items() %}
+                        <label class="model-option">
+                            <input type="radio" name="model" value="{{ key }}" {% if loop.first %}checked{% endif %}>
+                            <div class="model-card">
+                                <h4>{{ model.display }}</h4>
+                                <p>{{ model.description }}</p>
+                            </div>
+                        </label>
+                        {% endfor %}
+                    </div>
+                </div>
                 
                 <div class="controls">
                     <button id="generateBtn" class="generate-btn">
@@ -35,12 +50,14 @@
                     <img id="generatedImage" src="" alt="Generated Image">
                     <div class="image-actions">
                         <button id="downloadBtn" class="download-btn">Download Image</button>
+                        <button id="regenerateBtn" class="regenerate-btn">Regenerate</button>
                     </div>
                 </div>
                 
                 <div id="loadingIndicator" class="loading-indicator" style="display: none;">
                     <div class="spinner"></div>
                     <p>Generating your image...</p>
+                    <small class="model-status"></small>
                 </div>
 
                 <div id="errorMessage" class="error-message" style="display: none;"></div>
@@ -53,6 +70,8 @@
                     <button class="example-btn">Futuristic city with neon lights and flying cars</button>
                     <button class="example-btn">Beautiful garden with colorful flowers and butterflies</button>
                     <button class="example-btn">Mystical forest with glowing mushrooms and fairies</button>
+                    <button class="example-btn">Cyberpunk portrait of a samurai in neon city</button>
+                    <button class="example-btn">Watercolor painting of a cozy cottage in autumn</button>
                 </div>
             </div>
         </main>
