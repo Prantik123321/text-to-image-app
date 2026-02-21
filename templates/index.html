@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Text to Image Generator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎨 AI Image Generator</h1>
+            <p>Transform your words into stunning images using AI</p>
+        </header>
+
+        <main>
+            <div class="input-section">
+                <textarea 
+                    id="promptInput" 
+                    placeholder="Describe the image you want to generate... (e.g., 'A beautiful sunset over mountains with a lake')"
+                    rows="4"
+                ></textarea>
+                
+                <div class="controls">
+                    <button id="generateBtn" class="generate-btn">
+                        <span class="btn-text">Generate Image</span>
+                        <span class="loading-spinner" style="display: none;">⌛</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="result-section">
+                <div id="imageContainer" class="image-container" style="display: none;">
+                    <img id="generatedImage" src="" alt="Generated Image">
+                    <div class="image-actions">
+                        <button id="downloadBtn" class="download-btn">Download Image</button>
+                    </div>
+                </div>
+                
+                <div id="loadingIndicator" class="loading-indicator" style="display: none;">
+                    <div class="spinner"></div>
+                    <p>Generating your image...</p>
+                </div>
+
+                <div id="errorMessage" class="error-message" style="display: none;"></div>
+            </div>
+
+            <div class="examples-section">
+                <h3>Try these examples:</h3>
+                <div class="example-buttons">
+                    <button class="example-btn">A serene lake at sunset with mountains in background</button>
+                    <button class="example-btn">Futuristic city with neon lights and flying cars</button>
+                    <button class="example-btn">Beautiful garden with colorful flowers and butterflies</button>
+                    <button class="example-btn">Mystical forest with glowing mushrooms and fairies</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
